@@ -1,16 +1,22 @@
-
-    
-        {% extends 'blog/base.html' %}
-        {% block content %}
-                    {% for post in posts %}
-                        <div class="post">
-                            <div class="date">
-                                <p>published: {{ post.published_date }}</p>
-                            </div>
-                            <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
-                            <p>{{ post.text|linebreaksbr }}</p>
-                            <a href="{% url 'post_detail' pk=post.pk %}">Comments:{{ post.approved_comments.count }}</a>
-                        </div>
-                    {% endfor %}
+{% extends 'blog/base.html' %}
+    {% block content %}
+    {% if user.is_authenticated %}            
+        {% for post in posts %}
+            <div class="post">
+                <div class="date">
+                    <p>published: {{ post.published_date }}</p>
+                    </div>
+                    <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+                    <p>{{ post.text|linebreaksbr }}</p>
+                    <a href="{% url 'post_detail' pk=post.pk %}">Comments:{{ post.approved_comments.count }}</a>
+                    </div>
+        {% endfor %}
+        {% else %}
+        <p>you are not logged in *beauiful text as the homepage, when not logged in*</p>
+        <a href="{% url 'login' %}">Login</a>
+        <p>OR</p>
+        <a href="{% url 'signup' %}">Signup</a>
+        {% endif %}
+                    
         {% endblock %}    
     

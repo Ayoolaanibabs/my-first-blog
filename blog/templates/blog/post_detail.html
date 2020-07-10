@@ -9,10 +9,11 @@
         {% else %}
             <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
         {% endif %}
-        {% if user.is_authenticated %}
+        {% if perms.app_label.can_do_something %}
         <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
         <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
         {% endif %}
+        {% if user.is_authenticated %}
         <h2>{{ post.title }}</h2>
         <p>{{ post.text|linebreaksbr }}</p>
     </div>
@@ -24,8 +25,10 @@
             <div class="date">
                 {{ comment.created_date }}
             {% if not comment.approved_comment %}
+            {% if perms.app_label.can_do_something %}
             <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
             <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+            {% endif %}
             {% endif %}
             </div>
             <strong>{{ comment.author }}</strong>
@@ -35,4 +38,10 @@
         {% empty %}
         <p>No comments here yet :(</p>
 {% endfor %}
+{% else %}
+    <p>you are not logged in *beauiful text as the homepage, when not logged in*</p>
+    <a href="{% url 'login' %}">Login</a>
+    <p>OR</p>
+    <a href="{% url 'signup' %}">Signup</a>
+    {% endif %}
 {% endblock %}
